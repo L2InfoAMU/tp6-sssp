@@ -1,9 +1,6 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 /**
@@ -103,18 +100,25 @@ public class Grid implements Iterable<Cell> {
 
     private int countAliveNeighbours(int rowIndex, int columnIndex) {
         List<Cell> cells = getNeighbours(rowIndex,columnIndex);
+        int aliveNeighbours = 0;
+        for(int i = 0 ; i < cells.size() ; i++) {
+            if(cells.get(i).isAlive()) aliveNeighbours++;
+        }
+        return aliveNeighbours;
     }
 
-    // TODO: Écrire une version correcte de cette méthode.
     private CellState calculateNextState(int rowIndex, int columnIndex) {
-        return null;
+        if (countAliveNeighbours(rowIndex,columnIndex) > 3 || countAliveNeighbours(rowIndex,columnIndex) < 2) return CellState.DEAD;
+        return CellState.ALIVE;
     }
 
-
-
-    // TODO: Écrire une version correcte de cette méthode.
     private CellState[][] calculateNextStates() {
         CellState[][] nextCellState = new CellState[getNumberOfRows()][getNumberOfColumns()];
+        for(int x = 0 ; x <getNumberOfColumns() ; x++) {
+            for(int y = 0 ; y <getNumberOfRows() ; y++) {
+                nextCellState[x][y] = calculateNextState(y,x);
+            }
+        }
         return nextCellState;
     }
 
