@@ -108,23 +108,33 @@ public class Grid implements Iterable<Cell> {
     }
 
     private CellState calculateNextState(int rowIndex, int columnIndex) {
-        if (countAliveNeighbours(rowIndex,columnIndex) > 3 || countAliveNeighbours(rowIndex,columnIndex) < 2) return CellState.DEAD;
-        return CellState.ALIVE;
+        if(getCell(rowIndex,columnIndex).isAlive()) {
+            if(countAliveNeighbours(rowIndex,columnIndex) == 3 || countAliveNeighbours(rowIndex,columnIndex) == 2) return CellState.ALIVE;
+            return CellState.DEAD;
+        }
+
+        else{
+            if(countAliveNeighbours(rowIndex,columnIndex) == 3) return CellState.ALIVE;
+            return CellState.DEAD;
+        }
     }
 
     private CellState[][] calculateNextStates() {
         CellState[][] nextCellState = new CellState[getNumberOfRows()][getNumberOfColumns()];
         for(int x = 0 ; x <getNumberOfColumns() ; x++) {
             for(int y = 0 ; y <getNumberOfRows() ; y++) {
-                nextCellState[x][y] = calculateNextState(y,x);
+                nextCellState[y][x] = calculateNextState(y,x);
             }
         }
         return nextCellState;
     }
 
-    // TODO: Écrire une version correcte de cette méthode.
     private void updateStates(CellState[][] nextState) {
-
+        for(int x = 0 ; x <getNumberOfColumns() ; x++) {
+            for(int y = 0 ; y <getNumberOfRows() ; y++) {
+                cells[y][x].setState(nextState[y][x]);
+            }
+        }
     }
 
     /**
@@ -140,17 +150,20 @@ public class Grid implements Iterable<Cell> {
      * reproduction.</li>
      * </ul>
      */
-    // TODO: Écrire une version correcte de cette méthode.
-    void updateToNextGeneration() {
 
+    void updateToNextGeneration() {
+        updateStates(calculateNextStates());
     }
 
     /**
      * Sets all {@link Cell}s in this {@code Grid} as dead.
      */
-    // TODO: Écrire une version correcte de cette méthode.
     void clear() {
-
+        for(int x = 0 ; x <getNumberOfColumns() ; x++) {
+            for (int y = 0; y < getNumberOfRows(); y++) {
+                cells[y][x].setState(CellState.DEAD);
+            }
+        }
     }
 
     /**
@@ -159,7 +172,6 @@ public class Grid implements Iterable<Cell> {
      * @param random {@link Random} instance used to decide if each {@link Cell} is ALIVE or DEAD.
      * @throws NullPointerException if {@code random} is {@code null}.
      */
-    // TODO: Écrire une version correcte de cette méthode.
     void randomGeneration(Random random) {
 
     }
